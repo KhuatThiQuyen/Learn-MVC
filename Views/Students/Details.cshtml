@@ -1,0 +1,227 @@
+﻿@using StudentManagerMVC.Models;
+@model StudentManagerMVC.Models.StudentSubjectScore
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Student</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Age)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Age)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Class.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Class.Name)
+        </dd>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>First Score</th>
+                    <th>Second Score</th>
+                    <th>Third Score</th>
+                    <th>Final Score</th>
+
+                </tr>
+
+            </thead>
+            <br />
+            <tbody>
+                @*@{
+                        string subjectName = "";
+                        List<int> scoreType1s;
+                        List<int> scoreType2s;
+                        List<int> scoreType3s;
+                        double subjectScore;
+                        foreach (var score in Model.Scores.ToList())
+                        {
+                            if (score.Subject.Name != subjectName)
+                            {
+                                subjectName = score.Subject.Name;
+                            }
+                            // ma gia
+                            // neu subject moi khac subject cu:
+                            // neu subject cu co gia tri=> viet html cho subject cu (tinh gia tri diem trung binh cac thu)
+                            // neu subject cu khong co gia tri => khong viet html
+                            // set gia tri subjectName moi va reset scoreTypeXs ve rong, dat gia tri moi
+                            // neu la gia tri cuoi cung,
+
+                        }
+
+                    }*@
+                @foreach (var subjectScore in listScoreCalculator)
+                {
+                    string fSString = string.Join(", ", subjectScore.firstScore.ToArray());
+                    string sSString = string.Join(", ", subjectScore.secondScore.ToArray());
+                    string tSString = string.Join(", ", subjectScore.thirdScore.ToArray());
+
+
+                <tr>
+                    <form action="Edit" id="edit_info">
+                        <td>
+                            @Html.TextBoxFor(m => subjectScore.subject.Name)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => fSString)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => sSString)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => tSString)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => subjectScore.finalScore)
+                        </td>
+                        <td>
+                            <input type="button" value="update" id="update" />
+                        </td>
+
+                </tr>
+                }
+
+            </tbody>
+        </table>
+        <br />
+
+    </dl>
+</div>
+<p>
+
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+
+@section Scripts {
+    @*@Scripts.Render("~/Scripts/jquery-3.4.1.min.js")
+        @Scripts.Render("~/bundles/jqueryval")*@
+    <script type="text/javascript">
+        $("#btnGetScore").click(function () {
+            var id = $("#btnGetScore").data("studentId");
+            $.ajax({
+                url: "../GetStudentScore",
+                type: "GET",
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({ "id": id }),
+            });
+        });
+        function getScore() {
+            $.ajax({
+                url: "../Students/GetStudentScore",
+                type: "GET",
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringitfy({ "id": 1 }),
+            });
+        }
+
+        $(document).ready(function () {
+            $("#update").click(function () {
+                var StudentID = $("StudentID").val();
+                var SubjectID = $("SubjectID").val();
+                var ScoreTypeID = $("ScoreTypeID").val();
+                var ScoreNumber = $("ScoreNumber").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Student/update",
+                    data: $('#edit_info').serialize(),
+                    success: function (data) {
+                        if (flag == 1) {
+                            window.location = "Index";
+                        }
+                        else {
+                            alert("Error Occured");
+
+                        }
+                    }
+                });
+            });
+        });
+
+
+        //$(document).ready(function () {
+        //    loadData();
+        //});
+        //function loadData() {
+        //    $.ajax({
+        //        url: "Students/Detail",
+        //        type: "GET",
+        //        contentType: "application/json;charset=utf-8",
+        //        dataType: "json",
+        //        success: function (result) {
+        //            var html = '';
+        //            $.each(result, function (key, item) {
+        //                html += '<tr>'
+        //                html += '<td>' + item.StudentID + '</td>';
+        //                html += '<td>' + item.SubjectID + '</td>';
+        //                html += '<td>' + item.ScoreTypeID + '</td>';
+        //                html += '<td>' + item.ScoreNumber + '</td>';
+        //                html += '<td><a href="#" onclick="return getbyID(' + item.EmployeeID + ')">Edit</a> | <a href="#" onclick="Delele(' + item.EmployeeID + ')">Delete</a></td>';
+        //                html += '</tr>';
+        //            });
+        //            $('.tbody').html(html);
+        //        },
+        //        error: function (errormessage) {
+        //            alert(errormessage.responseText);
+        //        }
+        //    });
+        //}
+    //    function Update({
+    //        var res = validate();
+    //        if (res == false) {
+    //        return false;
+    //    }
+    //    var StudentObj = {
+    //        StudentID: $('#StudentID').val(),
+    //        SubjectID: $('#SubjectID').val(),
+    //        ScoreTypeID: $('#ScoreTypeID').val(),
+    //        ScoreNumber: $('#ScoreNumber').val(),
+    //    };
+    //    $.ajax({
+    //        url: "Student/Details",
+    //        data: JSON.stringify(empObj),
+    //        type: "POST",
+    //        contentType: "application/json;charset=utf-8",
+    //        dataType: "json",
+    //        success: function (result) {
+    //            loadData();
+    //            $('#StudentID').val("");
+    //            $('#SubjectID').val("");
+    //            $('#ScoreTypeID').val("");
+    //            $('#ScoreNumber').val("");
+
+    //        },
+    //        error: function (errormessage) {
+    //            alert(errormessage.responseText);
+    //        }
+    //    }
+    //    });
+    //}
+
+
+    </script>
+    }
