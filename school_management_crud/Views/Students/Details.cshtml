@@ -1,0 +1,201 @@
+﻿@using school_management_crud.Models;
+
+@model school_management_crud.Models.Student
+
+@{
+    ViewBag.Title = "Details";
+}
+@{
+  
+    school_managementEntities db = new school_managementEntities();
+
+    var scoreBySubjs = db.Students.Find(Model.ID).Scores.GroupBy(sc => sc.SubjectID);
+    List<StudentSubjectScore> listSubjectScores = new List<StudentSubjectScore>();
+    foreach (var scBySubj in scoreBySubjs)
+    {
+        Console.WriteLine(scBySubj);
+        int? subId = scBySubj.Key;
+        Subject subject = db.Subjects.Find(subId ?? 1);
+        List<double> firstScores = new List<double> (); //5 6 = 5.5
+        List<double> secondScores = new List<double>(); // 7
+        List<double> thirdScores = new List<double>(); // 8
+        //List<double?> finalScores = new List<double?>(); // 7.25
+
+        foreach (Score sc in scBySubj)
+        {
+            Console.WriteLine(sc);
+            if (sc.ScoreTypeID == 1 || sc.ScoreTypeID == 2)
+            {
+                firstScores.Add(sc.ScoreNumber ?? 0);
+            }
+            if (sc.ScoreTypeID == 3)
+            {
+                secondScores.Add(sc.ScoreNumber ?? 0);
+            }
+            if (sc.ScoreTypeID == 4)
+            {
+                thirdScores.Add(sc.ScoreNumber ?? 0);
+            }
+
+        }
+        // tinh trung binh 
+        //double fS = firstScores.Average()?? 0;
+        //double sS = firstScores.Average() ?? 0;
+        //double tS = firstScores.Average() ?? 0;
+        int count = firstScores.Count + secondScores.Count * 2 + thirdScores.Count * 3;
+        double finalS = (firstScores.Sum()  + secondScores.Sum() * 2 + thirdScores.Sum() * 3) / count;
+        StudentSubjectScore subjectScore = new StudentSubjectScore(firstScores, secondScores, thirdScores, Model, subject);
+        subjectScore.finalScore = finalS;
+        listSubjectScores.Add(subjectScore);
+
+    }
+
+}
+<h2>Details</h2>
+
+<div>
+    <h4>Student</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <table>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Age)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Age)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Class.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Class.Name)
+            </dd>
+
+
+            @*<dt>
+                @Html.DisplayNameFor(model => model.Sc)
+            </dt>
+            <dd>
+                @ViewBag.firstScore.SubjectID
+            </dd >*@
+
+
+        </table>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>First Score</th>
+                    <th>Second Score</th>
+                    <th>Third Score</th>
+                    <th>Final Score</th>
+
+                </tr>
+            </thead>
+            <br />
+            <tbody>
+                @*@{
+                    string subjectName = "";
+                    List<int> scoreType1s;
+                    List<int> scoreType2s;
+                    List<int> scoreType3s;
+                    double subjectScore;
+                    foreach (var score in Model.Scores.ToList())
+                    {
+                        if (score.Subject.Name != subjectName)
+                        {
+                            subjectName = score.Subject.Name;
+                        }
+                        // ma gia
+                        // neu subject moi khac subject cu:
+                        // neu subject cu co gia tri=> viet html cho subject cu (tinh gia tri diem trung binh cac thu)
+                        // neu subject cu khong co gia tri => khong viet html
+                        // set gia tri subjectName moi va reset scoreTypeXs ve rong, dat gia tri moi
+                        // neu la gia tri cuoi cung,
+
+                    }
+
+                }*@
+                @foreach (var subjectScore in listSubjectScores)
+                {
+                    string fSString = string.Join(", ", subjectScore.firstScore.ToArray());
+                    string sSString = string.Join(", ", subjectScore.secondScore.ToArray());
+                    string tSString = string.Join(", ", subjectScore.thirdScore.ToArray());
+
+
+                    <tr>
+                        <td>
+                            @Html.TextBoxFor(m => subjectScore.subject.Name)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => fSString)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => sSString)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => tSString)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => subjectScore.finalScore)
+                        </td>
+
+
+                    </tr>
+                }
+                
+
+
+
+            </tbody>
+        </table>
+        <br />
+        <button>Edit</button>
+
+
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery-3.4.1.min.js")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $("#btnGetScore").click(function () {
+            var id = $("#btnGetScore").data("studentId");
+            $.ajax({
+                url: "../GetStudentScore",
+                type: "GET",
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({ "id": id }),
+            });
+        });
+        function getScore() {
+            $.ajax({
+                url: "../Students/GetStudentScore",
+                type: "GET",
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringitfy({ "id": 1 }),
+            });
+        }
+    </script>
+
+
+}
