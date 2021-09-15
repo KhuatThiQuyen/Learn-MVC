@@ -100,7 +100,7 @@ namespace StudentManagerMVC.Controllers
             ScoreService service = new ScoreService(student, db);
            // service.CalculatorScore();
             StudentSubjectScore studentSubjectScore = service.CalculatorScore();
-
+           
             return View(studentSubjectScore);
             
         }

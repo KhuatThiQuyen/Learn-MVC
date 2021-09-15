@@ -9,7 +9,7 @@ namespace StudentManagerMVC.Models
     {
         
         public Student student { get; set; }
-        
+        //public virtual Student ID { get; set; }
         public List<ScoreCalculator> scoreCalculators { get;set; }
     }
 
