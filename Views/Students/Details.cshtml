@@ -1,9 +1,7 @@
-﻿@using StudentManagerMVC.Models;
+﻿@using StudentManagerMVC.Service;
 @model StudentManagerMVC.Models.StudentSubjectScore
 
-@{
-    ViewBag.Title = "Details";
-}
+@{ ViewBag.Title = "Details"; }
 
 <h2>Details</h2>
 
@@ -11,29 +9,29 @@
     <h4>Student</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+        @*<dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Age)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Age)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Age)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Age)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Class.Name)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Class.Name)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Class.Name)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Class.Name)
+            </dd>*@
         <table>
             <thead>
                 <tr>
@@ -70,48 +68,52 @@
                         }
 
                     }*@
-                @foreach (var subjectScore in listScoreCalculator)
+       
+                @foreach (var subjectScore in Model.scoreCalculators)
                 {
-                    string fSString = string.Join(", ", subjectScore.firstScore.ToArray());
-                    string sSString = string.Join(", ", subjectScore.secondScore.ToArray());
-                    string tSString = string.Join(", ", subjectScore.thirdScore.ToArray());
+                    
+                    string fSString = string.Join(",", subjectScore.firstScore.ToString());
+                    string sSString = string.Join(", ", subjectScore.secondScore.ToString());
+                    string tSString = string.Join(", ", subjectScore.thirdScore.ToString());
 
+    <tr>
+        
+        
+            <td>
+                @Html.TextBoxFor(m => subjectScore.subject.Name)
+            </td>
+            <td>
+                @Html.TextBoxFor(m => fSString)
+            </td>
+            <td>
+                @Html.TextBoxFor(m => sSString)
+            </td>
+            <td>
+                @Html.TextBoxFor(m => tSString)
+            </td>
+            <td>
+                @Html.TextBoxFor(m => subjectScore.finalScore)
+            </td>
+            <td>
+                <input type="button" value="update" id="update" />
+            </td>
 
-                <tr>
-                    <form action="Edit" id="edit_info">
-                        <td>
-                            @Html.TextBoxFor(m => subjectScore.subject.Name)
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(m => fSString)
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(m => sSString)
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(m => tSString)
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(m => subjectScore.finalScore)
-                        </td>
-                        <td>
-                            <input type="button" value="update" id="update" />
-                        </td>
-
-                </tr>
-                }
+    </tr>}
 
             </tbody>
         </table>
-        <br />
+
 
     </dl>
 </div>
 <p>
-
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", "Students")
 </p>
+@*<p>
+
+        @Html.ActionLink("Edit", "Edit", new { id = _std.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>*@
 
 
 @section Scripts {
@@ -163,65 +165,65 @@
         });
 
 
-        //$(document).ready(function () {
-        //    loadData();
-        //});
-        //function loadData() {
+            //$(document).ready(function () {
+            //    loadData();
+            //});
+            //function loadData() {
+            //    $.ajax({
+            //        url: "Students/Detail",
+            //        type: "GET",
+            //        contentType: "application/json;charset=utf-8",
+            //        dataType: "json",
+            //        success: function (result) {
+            //            var html = '';
+            //            $.each(result, function (key, item) {
+            //                html += '<tr>'
+            //                html += '<td>' + item.StudentID + '</td>';
+            //                html += '<td>' + item.SubjectID + '</td>';
+            //                html += '<td>' + item.ScoreTypeID + '</td>';
+            //                html += '<td>' + item.ScoreNumber + '</td>';
+            //                html += '<td><a href="#" onclick="return getbyID(' + item.EmployeeID + ')">Edit</a> | <a href="#" onclick="Delele(' + item.EmployeeID + ')">Delete</a></td>';
+            //                html += '</tr>';
+            //            });
+            //            $('.tbody').html(html);
+            //        },
+            //        error: function (errormessage) {
+            //            alert(errormessage.responseText);
+            //        }
+            //    });
+            //}
+        //    function Update({
+        //        var res = validate();
+        //        if (res == false) {
+        //        return false;
+        //    }
+        //    var StudentObj = {
+        //        StudentID: $('#StudentID').val(),
+        //        SubjectID: $('#SubjectID').val(),
+        //        ScoreTypeID: $('#ScoreTypeID').val(),
+        //        ScoreNumber: $('#ScoreNumber').val(),
+        //    };
         //    $.ajax({
-        //        url: "Students/Detail",
-        //        type: "GET",
+        //        url: "Student/Details",
+        //        data: JSON.stringify(empObj),
+        //        type: "POST",
         //        contentType: "application/json;charset=utf-8",
         //        dataType: "json",
         //        success: function (result) {
-        //            var html = '';
-        //            $.each(result, function (key, item) {
-        //                html += '<tr>'
-        //                html += '<td>' + item.StudentID + '</td>';
-        //                html += '<td>' + item.SubjectID + '</td>';
-        //                html += '<td>' + item.ScoreTypeID + '</td>';
-        //                html += '<td>' + item.ScoreNumber + '</td>';
-        //                html += '<td><a href="#" onclick="return getbyID(' + item.EmployeeID + ')">Edit</a> | <a href="#" onclick="Delele(' + item.EmployeeID + ')">Delete</a></td>';
-        //                html += '</tr>';
-        //            });
-        //            $('.tbody').html(html);
+        //            loadData();
+        //            $('#StudentID').val("");
+        //            $('#SubjectID').val("");
+        //            $('#ScoreTypeID').val("");
+        //            $('#ScoreNumber').val("");
+
         //        },
         //        error: function (errormessage) {
         //            alert(errormessage.responseText);
         //        }
+        //    }
         //    });
         //}
-    //    function Update({
-    //        var res = validate();
-    //        if (res == false) {
-    //        return false;
-    //    }
-    //    var StudentObj = {
-    //        StudentID: $('#StudentID').val(),
-    //        SubjectID: $('#SubjectID').val(),
-    //        ScoreTypeID: $('#ScoreTypeID').val(),
-    //        ScoreNumber: $('#ScoreNumber').val(),
-    //    };
-    //    $.ajax({
-    //        url: "Student/Details",
-    //        data: JSON.stringify(empObj),
-    //        type: "POST",
-    //        contentType: "application/json;charset=utf-8",
-    //        dataType: "json",
-    //        success: function (result) {
-    //            loadData();
-    //            $('#StudentID').val("");
-    //            $('#SubjectID').val("");
-    //            $('#ScoreTypeID').val("");
-    //            $('#ScoreNumber').val("");
-
-    //        },
-    //        error: function (errormessage) {
-    //            alert(errormessage.responseText);
-    //        }
-    //    }
-    //    });
-    //}
 
 
     </script>
-    }
+}
