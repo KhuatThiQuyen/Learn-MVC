@@ -57,11 +57,13 @@ namespace StudentManagerMVC.Service
                 double finalsc = (firstScore.Sum() + secondScore.Sum() * 2 + thirdScore.Sum() * 3) / count;
                 ScoreCalculator subjectSc = new ScoreCalculator();
                 subjectSc.finalScore = finalsc;
+                subjectSc.subject = subject;
+                subjectSc.firstScore = firstScore;
+                subjectSc.secondScore = secondScore;
+                subjectSc.thirdScore = thirdScore;
                 listScoreCalculator.Add(subjectSc);
 
             }
-
-
             return StudentSubjectScore;
         }
      
