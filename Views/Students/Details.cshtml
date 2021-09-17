@@ -163,7 +163,7 @@
                     function edit_record_score(fSString, sSString, tSString) {
                         $.ajax({
                             url,
-                            type: 'post',
+                            type: 'POST',
                             contentType: 'application/json;charset=utf-8',
                             datatype: 'json',
                             data: "{fSString:'" + $("#fSString").val() + "',sSString:'" + $("#sSString").val() + "',tSString:'" + $("#tSString").val() + "' }",
