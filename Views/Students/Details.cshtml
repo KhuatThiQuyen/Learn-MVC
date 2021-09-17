@@ -9,32 +9,11 @@
     <h4>Student</h4>
     <hr />
     <dl class="dl-horizontal">
-        @*<dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Age)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Age)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Class.Name)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Class.Name)
-            </dd>*@
-        <table>
+        <table id="myDataTable" class="display">
             <thead>
                 <tr>
+
                     <th>Subject</th>
                     <th>First Score</th>
                     <th>Second Score</th>
@@ -47,64 +26,96 @@
             <br />
             <tbody>
                 @*@{
-                        string subjectName = "";
-                        List<int> scoreType1s;
-                        List<int> scoreType2s;
-                        List<int> scoreType3s;
-                        double subjectScore;
-                        foreach (var score in Model.Scores.ToList())
-                        {
-                            if (score.Subject.Name != subjectName)
-                            {
-                                subjectName = score.Subject.Name;
-                            }
-                            // ma gia
-                            // neu subject moi khac subject cu:
-                            // neu subject cu co gia tri=> viet html cho subject cu (tinh gia tri diem trung binh cac thu)
-                            // neu subject cu khong co gia tri => khong viet html
-                            // set gia tri subjectName moi va reset scoreTypeXs ve rong, dat gia tri moi
-                            // neu la gia tri cuoi cung,
+                string subjectName = "";
+                List<int> scoreType1s;
+                List<int> scoreType2s;
+                List<int> scoreType3s;
+                double subjectScore;
+                foreach (var score in Model.Scores.ToList())
+                {
+                    if (score.Subject.Name != subjectName)
+                    {
+                        subjectName = score.Subject.Name;
+                    }
+                    // ma gia
+                    // neu subject moi khac subject cu:
+                    // neu subject cu co gia tri=> viet html cho subject cu (tinh gia tri diem trung binh cac thu)
+                    // neu subject cu khong co gia tri => khong viet html
+                    // set gia tri subjectName moi va reset scoreTypeXs ve rong, dat gia tri moi
+                    // neu la gia tri cuoi cung,
 
-                        }
+                }
 
-                    }*@
-       
+            }*@
+
                 @foreach (var subjectScore in Model.scoreCalculators)
                 {
-                    
+
                     string fSString = string.Join(",", subjectScore.firstScore.ToArray());
-                    string sSString = string.Join(", ", subjectScore.secondScore.ToArray());
-                    string tSString = string.Join(", ", subjectScore.thirdScore.ToArray());
+                    string sSString = string.Join(",", subjectScore.secondScore.ToArray());
+                    string tSString = string.Join(",", subjectScore.thirdScore.ToArray());
+                    // string[] str = TextBoxValue.Split(new Char[] { '. ' });
 
-    <tr>
-            <td>
-                @Html.TextBoxFor(m => subjectScore.subject.Name)
-            </td>
-            <td>
-                @Html.TextBoxFor(m => fSString)
-            </td>
-            <td>
-                @Html.TextBoxFor(m => sSString)
-            </td>
-            <td>
-                @Html.TextBoxFor(m => tSString)
-            </td>
-            <td>
-                @Html.TextBoxFor(m => subjectScore.finalScore)
-            </td>
-            <td>
-                <input type="button" value="update" id="update" />
-            </td>
 
-    </tr>}
+                    <tr>
+                        <td>
+                            @Html.TextBoxFor(m => subjectScore.subject.Name)
+                        </td>
 
+                        <td>
+                            @Html.TextBoxFor(m => fSString)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => sSString)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => tSString)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(m => subjectScore.finalScore)
+                        </td>
+                    </tr>
+
+                    @*<tr>
+                    <td class="Subject">
+                        <span>@subjectScore.subject</span>
+                    </td>
+
+                    <td class="firstScore">
+                        <span>@subjectScore.firstScore</span>
+                        <input type="text" value="@subjectScore.firstScore" style="display:none" />
+                    </td>
+
+                    <td class="secondScore">
+                        <span>@subjectScore.secondScore</span>
+                        <input type="text" value="@subjectScore.secondScore" style="display:none" />
+                    </td>
+
+                    <td class="firstScore">
+                        <span>@subjectScore.thirdScore</span>
+                        <input type="text" value="@subjectScore.thirdScore" style="display:none" />
+                    </td>
+                    <td>
+                        <a class="btnEdit" href="javascript:;">Edit</a>
+
+                    </td>
+                </tr>*@
+
+
+                }
             </tbody>
+            <td><input type="button" id="btnsubmit" value="Edit" /></td>
+
         </table>
 
 
+
     </dl>
+
+
 </div>
 <p>
+
     @Html.ActionLink("Back to List", "Index", "Students")
 </p>
 @*<p>
@@ -115,55 +126,65 @@
 
 
 @section Scripts {
-    @*@Scripts.Render("~/Scripts/jquery-3.4.1.min.js")
-        @Scripts.Render("~/bundles/jqueryval")*@
-    <script type="text/javascript">
-        $("#btnGetScore").click(function () {
-            var id = $("#btnGetScore").data("studentId");
-            $.ajax({
-                url: "../GetStudentScore",
-                type: "GET",
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({ "id": id }),
-            });
-        });
-        function getScore() {
-            $.ajax({
-                url: "../Students/GetStudentScore",
-                type: "GET",
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringitfy({ "id": 1 }),
-            });
-        }
+            <script type="text/javascript">
+               
+                    //$("#btnGetScore").click(function () {
+                    //    var id = $("#btnGetScore").data("studentId");
+                    //    $.ajax({
+                    //        url: "../GetStudentScore",
+                    //        type: "GET",
+                    //        contentType: 'application/json',
+                    //        dataType: 'json',
+                    //        data: JSON.stringify({ "id": id }),
+                    //    });
+                    //});
+                    //function getScore() {
+                    //    $.ajax({
+                    //        url: "../Students/GetStudentScore",
+                    //        type: "GET",
+                    //        contentType: 'application/json',
+                    //        dataType: 'json',
+                    //        data: JSON.stringitfy({ "id": 1 }),
+                    //    });
+                    //}
 
-        $(document).ready(function () {
-            $("#update").click(function () {
-                var firstScore = $("fSString").val();
-                var secondScore = $("sSString").val();
-                var thirdScore = $("tSString").val();
-              
 
-                $.ajax({
-                    type: "POST",
-                    url: "../Student/Details",
-                    data: $('#edit_info').serialize(),
-                    success: function (data) {
-                        if (flag == 1) {
-                            window.location = "Index";
-                        }
-                        else {
-                            alert("Error Occured");
+                    // update score when edit
+                    $("#btnsubmit").click(function () {
+                        var id = $("#btnsubmit").data("studentId");
+                        $.ajax({
+                            url,
+                            type: "GET",
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            data: JSON.stringify({ "id": id }),
+                        });
+                    });
+                    function edit_record_score(fSString, sSString, tSString) {
+                        $.ajax({
+                            url,
+                            type: 'post',
+                            contentType: 'application/json;charset=utf-8',
+                            datatype: 'json',
+                            data: "{fSString:'" + $("#fSString").val() + "',sSString:'" + $("#sSString").val() + "',tSString:'" + $("#tSString").val() + "' }",
+                            success: function (data) {
 
-                        }
+                                data = JSON.parse(data.d);
+                                scoreid = scoreid;
+                                $("#fSString").val(fSString);
+                                $("#sSString").val(sSString);
+                                $("#tSString").val(tSString);
+
+                                //I m writing this condition for updating a record
+                                if (scoreid != null) {
+                                    $("#btnsubmit").val("Update");
+                                }
+                            },
+                            error: function () {
+                                alert('Update Error');
+                            },
+                        });
                     }
-                });
-            });
-        });
-
-
-
-
+                
     </script>
 }
