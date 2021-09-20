@@ -86,8 +86,9 @@ namespace StudentManagerMVC.Controllers
 
 
         // GET: Students/Details/5
+        
         public ActionResult Details(int? id)
-        {
+        {     
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -97,12 +98,22 @@ namespace StudentManagerMVC.Controllers
             {
                 return HttpNotFound();
             }
+            
             ScoreService service = new ScoreService(student, db);
            // service.CalculatorScore();
             StudentSubjectScore studentSubjectScore = service.CalculatorScore();
            
-            return View(studentSubjectScore);
+            return View(studentSubjectScore); 
+        }
+
+        [HttpPost]
+        public ActionResult UpdateScore(ScoreCalculator scoreCalculator)
+        {
             
+
+            db.SaveChanges();
+            return new EmptyResult();
+
         }
 
         // GET: Students/Create
