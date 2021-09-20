@@ -32,43 +32,96 @@
             <tbody>
                 @foreach (var subjectScore in Model.scoreCalculators)
                 {
+                    
                     <tr>
                         <td class="col-lg-2">
                             <span>@subjectScore.subject.Name</span>
                             @*@Html.EditorFor(m => subjectScore.subject.Name, new { htmlAttributes = new { @class = "form-control" } })*@
                         </td>
                         <td class="firstScore">
-                          
-                                @Html.EditorFor(m => subjectScore.firstScore, new { htmlAttributes = new { @class = "form-control", style = "flex - direction: row;" } })
-                        
+                            @Html.EditorFor(m => subjectScore.firstScore,
+                           new { htmlAttributes = new { @class = "form-control", id = string.Format("{0}_{1}_firstScore", Model.student.ID, subjectScore.subject.ID) } })
                         </td>
                         <td class="secondScore">
-                           
-                                @Html.EditorFor(m => subjectScore.secondScore, new { htmlAttributes = new { @class = "form-control" } })
-                            
+                            @Html.EditorFor(m => subjectScore.secondScore,
+                           new { htmlAttributes = new { @class = "form-control", id = string.Format("{0}_{1}_secondScore", Model.student.ID, subjectScore.subject.ID) } })
                         </td>
                         <td class="thirdScore">
-                           
-                                @Html.EditorFor(m => subjectScore.thirdScore, new { htmlAttributes = new { @class = "form-control"} })
-                            
+
+                            @Html.EditorFor(m => subjectScore.thirdScore,
+                           new { htmlAttributes = new { @class = "form-control", id = string.Format("{0}_{1}_thirdScore", Model.student.ID, subjectScore.subject.ID) } })
                         </td>
                         <td class="col-lg-1">
                             <span>@subjectScore.finalScore</span>
-                            
+
                         </td>
                         <td>
-                            <button type="button" class="btn btn-primary" id="btnUpdate"  onclick="Update()">Update</button>
-                            <script>
+                            <button type="button" class="btn btn-primary" id="btnUpdate" onclick="Update()">Update</button>
+                            
+                            @*<script>
                                 function Update() {
+                                                                var studentId = @Model.student.ID;
+                                                                var subjectId = @subjectScore.subject.ID;
+                                                                //get score from input
+                                                                var firstScore = $(`#${studentId}_${subjectId}_firstScore`).val();
+                                                                var thirdScore = $(`#${studentId}_${subjectId}_thirdScore`).val();
+
+                                                                // then send it by ajax call
+                                                                var empObj = {
+                                                                    /* Name: $('#Name').val(),*/
+                                                                    //e tam tat skype di mang a lag lam
+                                                                    firstScore,
+                                                                    thirdScore
+                                                                    //secondScore: $('#secondScore').val(),
+                                                                    //thirdScore: $('#thirdScore').val(),
+                                                                    //finalScore: $('#finalScore').val()
+                                                                };
+                                                                $.ajax({
+                                                                url: "/Students/UpdateScore",
+                                                                    data: JSON.stringify(empObj),
+                                                                    type: "POST",
+                                                                    contentType: "application/json;charset=utf-8",
+                                                                    dataType: "json",
+                                                                    success: function (result) {
+                                                                        $('#firstScore').val("");
+                                                                        $('#secondScore').val("");
+                                                                        $('#thirdScore').val("");
+                                                                        $('#finalScore').val("");
+                                                                    },
+                                                                    error: function (errormessage) {
+                                                                        alert(errormessage.responseText);
+                                                                    }
+                                                                });
+                                                            }
+
+                                                        </script>*@
+                        </td>
+                    </tr>
+                }
+
+        </table>
+      
+    <script>
+        function Update() {
+            var studentId = @Model.student.ID;
+            var subjectId = @Model.scoreCalculators.subject.ID;
+            @*var subjectid = @Model.scoreCalculators.subjectid;*@
+                                    //get score from input
+            var firstScore = $(`#${studentId}_${subjectId}_firstScore`).val();
+            var secondScore = $(`#${studentId}_${subjectId}_secondScore`).val();
+            var thirdScore = $(`#${studentId}_${subjectId}_thirdScore`).val();
+                                    // then send it by ajax call
                                     var empObj = {
-                                        /* Name: $('#Name').val(),*/
-                                        firstScore: $('#firstScore').val(),
-                                        secondScore: $('#secondScore').val(),
-                                        thirdScore: $('#thirdScore').val(),
-                                        finalScore: $('#finalScore').val()
+                                        
+                                        firstScore,
+                                        secondScore,
+                                        thirdScore
+                                        //secondScore: $('#secondScore').val(),
+                                        //thirdScore: $('#thirdScore').val(),
+                                        //finalScore: $('#finalScore').val()
                                     };
                                     $.ajax({
-                                        url: "/Students/UpdateScore",
+                                    url: "/Students/UpdateScore",
                                         data: JSON.stringify(empObj),
                                         type: "POST",
                                         contentType: "application/json;charset=utf-8",
@@ -84,13 +137,7 @@
                                         }
                                     });
                                 }
-                                
-                            </script>
-                        </td>
-                    </tr>
-                }
-
-        </table>
+    </script>
 
     </dl>
 </div>
@@ -100,139 +147,139 @@
 
 @*<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script type="text/javascript" src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>*@
-@section scripts{
-    <script>
-        $(document).ready(function () {
-            Update();
-        });
 
-        function loadData() {
-            $.ajax({
-                url: "/Students/Details/",
-                type: "GET",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (result) {
-                    var html = '';
-                    $.each(result, function (key, subjectScore) {
-                        html += '<tr>';
-                        html += '<td>' + subjectScore.firstScore + '</td>';
-                        html += '<td>' + subjectScore.secondScore + '</td>';
-                        html += '<td>' + subjectScore.thirdScore + '</td>';
-                        html += '<td><a href="#" onclick="return getbyID(' + subjectScore.Id + ')">Edit</a> | <a href="#" onclick="Delele(' + subjectScore.Id + ')">Delete</a></td>';
-                        html += '</tr>';
-                    });
-                    $('.tbody').html(html);
-                },
-                error: function (errormessage) {
-                    alert(errormessage.responseText);
-                }
-            });
-        }
-        
-        function Update() {         
-            var empObj = {
-               /* Name: $('#Name').val(),*/
-                firstScore: $('#firstScore').val(),
-                secondScore: $('#secondScore').val(),
-                thirdScore: $('#thirdScore').val(),
-                finalScore: $('#finalScore').val()
-
-            };
-            $.ajax({
-                url: "/Students/Details",
-                data: JSON.stringify(empObj),
-                type: "POST",
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function (result) {
-                    loadData();
-                    $('#firstScore').val("");
-                    $('#secondScore').val("");
-                    $('#thirdScore').val("");
-                    $('#finalScore').val("");
-                },
-                error: function (errormessage) {
-                    alert(errormessage.responseText);
-                }
-                $("#btnUpdate").click(Update);
+@*<script>
+            $(document).ready(function () {
+                Update();
             });
 
-            
-    </script>
-}
+            function loadData() {
+                $.ajax({
+                    url: "/Students/Details/",
+                    type: "GET",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        var html = '';
+                        $.each(result, function (key, subjectScore) {
+                            html += '<tr>';
+                            html += '<td>' + subjectScore.firstScore + '</td>';
+                            html += '<td>' + subjectScore.secondScore + '</td>';
+                            html += '<td>' + subjectScore.thirdScore + '</td>';
+                            html += '<td><a href="#" onclick="return getbyID(' + subjectScore.Id + ')">Edit</a> | <a href="#" onclick="Delele(' + subjectScore.Id + ')">Delete</a></td>';
+                            html += '</tr>';
+                        });
+                        $('.tbody').html(html);
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    }
+                });
+            }
+
+            function Update() {
+                var empObj = {
+                    /* Name: $('#Name').val(),*/
+                    firstScore: $('#firstScore').val(),
+                    secondScore: $('#secondScore').val(),
+                    thirdScore: $('#thirdScore').val(),
+                    finalScore: $('#finalScore').val()
+
+                };
+                $.ajax({
+                    url: "/Students/Details",
+                    data: JSON.stringify(empObj),
+                    type: "POST",
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: function (result) {
+                        loadData();
+                        $('#firstScore').val("");
+                        $('#secondScore').val("");
+                        $('#thirdScore').val("");
+                        $('#finalScore').val("");
+                    },
+                    error: function (errormessage) {
+                        alert(errormessage.responseText);
+                    }
+                                $("#btnUpdate").click(Update);
+                });
+
+
+        </script>
+    }*@
 
 @*@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
-<script type="text/javascript">
-    $(function () {
-        //Remove the dummy row if data present.
-        if ($("#tblStudents tr").length > 2) {
-            $("#tblStudents tr:eq(1)").remove();
-        } else {
-            var row = $("#tblStudents tr:last-child");
-            row.find(".Edit").hide();
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+    <script type="text/javascript">
+        $(function () {
+            //Remove the dummy row if data present.
+            if ($("#tblStudents tr").length > 2) {
+                $("#tblStudents tr:eq(1)").remove();
+            } else {
+                var row = $("#tblStudents tr:last-child");
+                row.find(".Edit").hide();
+
+            }
+        });
+        function AppendRow(row, firstScore, secondScore, thirdScore) {
+
+            //Blind firstScore
+            $(".firstScore", row).find("input").val(firstScore);
+
+            //Blind secondScore
+            $(".secondScore", row).find("input").val(secondScore);
+
+            //Blind thirdScore
+            $(".thirdScore", row).find("input").val(thirdScore);
+
+            row.find(".Edit").show();
+            $("#tblStudents").append(row);
+
+
+            //Edit event handler.
+            $("body").on("click", "#tblStudents .Edit", function () {
+                var row = $(this).closest("tr");
+                $("td", row).each(function () {
+                    if ($(this).find("input").length > 0) {
+                        $(this).find("input").show();
+                    }
+                });
+                row.find(".Update").show();
+                row.find(".Cancel").show();
+                $(this).hide();
+            });
+
+            ////Update event handler.
+            $("body").on("click", "#tblStudents .Update", function () {
+                var row = $(this).closest("tr");
+                $("td", row).each(function () {
+                    if ($(this).find("input").length > 0) {
+                        var input = $(this).find("input");
+                        input.hide();
+                    }
+                });
+                row.find(".Edit").show();
+                row.find(".Cancel").hide();
+                $(this).hide();
+
+                var student = {};
+                student.firstScore = row.find(".firstScore").find("input").html();
+                student.secondScore = row.find(".secondScore").find("input").html();
+                student.thirdScore = row.find(".thirdScore").find("input").html();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Students/Details",
+                    data: '{student:' + JSON.stringify(student) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json"
+                });
+            });
+
+
 
         }
-    });
-    function AppendRow(row, firstScore, secondScore, thirdScore) {
-
-        //Blind firstScore
-        $(".firstScore", row).find("input").val(firstScore);
-
-        //Blind secondScore
-        $(".secondScore", row).find("input").val(secondScore);
-
-        //Blind thirdScore
-        $(".thirdScore", row).find("input").val(thirdScore);
-
-        row.find(".Edit").show();
-        $("#tblStudents").append(row);
-
-
-        //Edit event handler.
-        $("body").on("click", "#tblStudents .Edit", function () {
-            var row = $(this).closest("tr");
-            $("td", row).each(function () {
-                if ($(this).find("input").length > 0) {
-                    $(this).find("input").show();
-                }
-            });
-            row.find(".Update").show();
-            row.find(".Cancel").show();
-            $(this).hide();
-        });
-
-        ////Update event handler.
-        $("body").on("click", "#tblStudents .Update", function () {
-            var row = $(this).closest("tr");
-            $("td", row).each(function () {
-                if ($(this).find("input").length > 0) {
-                    var input = $(this).find("input");
-                    input.hide();
-                }
-            });
-            row.find(".Edit").show();
-            row.find(".Cancel").hide();
-            $(this).hide();
-
-            var student = {};
-            student.firstScore = row.find(".firstScore").find("input").html();
-            student.secondScore = row.find(".secondScore").find("input").html();
-            student.thirdScore = row.find(".thirdScore").find("input").html();
-
-            $.ajax({
-                type: "POST",
-                url: "/Students/Details",
-                data: '{student:' + JSON.stringify(student) + '}',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json"
-            });
-        });
-
-
-
-    }
-</script>
-</body>*@
+    </script>
+    </body>*@

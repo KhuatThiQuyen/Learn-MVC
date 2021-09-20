@@ -107,12 +107,9 @@ namespace StudentManagerMVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateScore(ScoreCalculator scoreCalculator)
-        {
-            
-
-            db.SaveChanges();
-            return new EmptyResult();
+        public ActionResult UpdateScore(int? firstScore, int? secondScore, int? thirdScore )
+        {           
+            return Json(new { firstScore, secondScore, thirdScore});
 
         }
 
